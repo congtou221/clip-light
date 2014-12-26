@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+	</body>
+	<script>
+		var ball = {x:400,y:400,vx:Math.random()*10+10,vy:Math.random()*10+10,r:100};
+		window.onload = function(){
+			
+			var canvas = document.getElementById("canvas");
+			var context = canvas.getContext("2d");
+						
+			canvas.width = 800;
+			canvas.height = 800;
+			
+			setInterval(
+				function(){
+					drawBall(context);
+					update(canvas.width,canvas.height);
+				},
+				50
+			);
+		}
+		
+
+		function drawBall(cxt){
+				
+			var canvas = cxt.canvas
+			cxt.clearRect(0,0,canvas.width,canvas.height);
+			//背景图上下文
+			cxt.save();
+			
+			cxt.beginPath();
+			cxt.fillStyle = "black";
+			cxt.fillRect(0,0,canvas.width,canvas.height);
+			cxt.fill();
+			//依据路径剪切出来的新绘图上下文
+			cxt.beginPath();
+			cxt.fillStyle = "#fff";
+			cxt.arc(ball.x,ball.y,ball.r,0,2*Math.PI);
+			cxt.closePath();
+			
+			cxt.clip();
+			
+			cxt.fill();
+			//在新绘图上下文中写字 ps:定位依据原上下文
+			cxt.beginPath();
+			cxt.fillStyle = "#d53";
+			cxt.font = "bold 80px arial";
+			cxt.textAlign = "center";
+			cxt.textBaseline = "middle";
+			cxt.fillText("CANVAS",canvas.width*0.5,canvas.height*0.5-200);
+			cxt.fillText("CANVAS",canvas.width*0.5,canvas.height*0.5);
+			cxt.fillText("CANVAS",canvas.width*0.5,canvas.height*0.5+200);
+			
+			cxt.restore();
+		}
+		function update(canvasWidth,canvasHeight){
+			ball.x +=ball.vx;
+			ball.y +=ball.vy;
+			if (ball.x+ball.r>canvasWidth){
+				ball.x = canvasWidth-ball.r;
+				ball.vx = -ball.vx;
+			}
+			if (ball.x-ball.r<0){
+				ball.x = ball.r;
+				ball.vx = -ball.vx;
+			}
+			if(ball.y+ball.r>canvasHeight){
+				ball.y = canvasHeight-ball.r;
+				ball.vy = -ball.vy;
+			}
+			if(ball.y-ball.r<0){
+				ball.y = ball.r;
+				ball.vy = -ball.vy;
+			}
+		}
+		
+	</script>
+</html>
